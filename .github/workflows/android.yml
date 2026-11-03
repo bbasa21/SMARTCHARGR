@@ -1,0 +1,44 @@
+name: Android APK (Kivy Docker)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Restore Buildozer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.buildozer
+          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          restore-keys: |
+            buildozer-${{ runner.os }}-
+
+      - name: Pull official Kivy Buildozer Docker image
+        run: docker pull ghcr.io/kivy/buildozer:latest
+
+      - name: Build debug APK inside Kivy Docker
+        run: |
+          mkdir -p "$HOME/.buildozer"
+          docker run --rm \
+            --volume "${{ github.workspace }}:/home/user/hostcwd" \
+            --volume "$HOME/.buildozer:/home/user/.buildozer" \
+            ghcr.io/kivy/buildozer:latest android debug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SMARTCHARGR-debug-apk
+          path: bin/*.apk
+          if-no-files-found: error
+          retention-days: 14
