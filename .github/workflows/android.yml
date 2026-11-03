@@ -25,8 +25,6 @@ jobs:
         with:
           path: ~/.buildozer
           key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
-          restore-keys: |
-            buildozer-${{ runner.os }}-
 
       - name: Pull official Kivy Buildozer Docker image
         run: docker pull ghcr.io/kivy/buildozer:latest
