@@ -1,26 +1,24 @@
 # SMARTCHARGR
 
-A Kivy-based Android battery precision display for Samsung devices.
+A Kivy-based Samsung battery precision display with a movable-to-be overlay prototype.
 
 ## Build policy
 
-APK builds use the official `ghcr.io/kivy/buildozer` Docker image through GitHub Actions. No Android Studio or alternate APK builder is used.
+APK builds use only the official `ghcr.io/kivy/buildozer` Docker image through GitHub Actions. No Android Studio or alternate APK builder is used.
 
-## Current prototype
+## Version 0.2.0
 
-- Reads Samsung's `/sys/class/power_supply/battery/batt_read_raw_soc` through `su`.
+- Reads Samsung `/sys/class/power_supply/battery/batt_read_raw_soc` through `su`.
 - Displays the raw-derived percentage with two decimal places.
-- Uses a blue/white Kivy interface.
+- Requests Android's special "Display over other apps" permission.
+- Adds a floating Android `TYPE_APPLICATION_OVERLAY` text window, updated from the live fuel-gauge reading.
+- The overlay is currently tied to the app process and is removed when the app stops; a persistent foreground service is a later step.
 
-**Measurement note:** two decimal places are a display format, not a guarantee of 0.01% sensor accuracy. The observed gauge readings have so far changed in 0.10% steps.
+## Important limitations
 
-## Roadmap
-
-1. Build and install a baseline APK.
-2. Verify root access and live battery readings inside the packaged APK.
-3. Add charging-state and Samsung fast-charging detection based on verified device data.
-4. Prototype a movable overlay using Android APIs from the Kivy app.
-5. Investigate the separate SystemUI integration needed for a true Status Bar / Lock Screen percentage replacement. A normal Kivy window cannot directly replace Samsung SystemUI text.
+- Fast-charge detection is deliberately not claimed yet. The app does not show an "only while fast charging" behavior until a reliable Samsung A50 indicator is verified.
+- Lock-screen visibility is not guaranteed for application overlays on Android 11 / One UI 3.1. A dedicated SystemUI/LSPosed integration is a separate development step.
+- Two decimal places are a display format, not a guarantee of 0.01% sensor accuracy. Observed fuel-gauge readings have so far changed in 0.10% steps.
 
 ## Build
 
