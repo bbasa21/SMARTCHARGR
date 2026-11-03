@@ -1,0 +1,1 @@
+The probe workflow installs `platform-tools`, `platforms;android-34`, and `build-tools;34.0.0`. The obsolete SDK package identifier `tools` must not be requested because current Android SDK repositories no longer provide it.
